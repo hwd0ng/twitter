@@ -1,7 +1,18 @@
 import express from "express";
-import * as tweetController from '../controller/tweet.js'
+import * as tweetController from '../controller/tweets.js'
+import { body } from 'express-validator';
+import { validate } from "../middleware/validator.js";
+
 
 const router = express.Router();
+
+/* 문제
+    Post, Put에 text에 대해 빈문자열을 없애고, 최소 3자 이상 입력해야 데이터를 저장하도록
+    API에 적용
+*/
+const validateTweet = [
+    body('text').trim().isLength({min:3}).withMessage('최소 3자 이상 입력'), validate
+]
 
 router.use((req, res, next) => {            // 라우터 등록
     console.log('tweets 존재하는 미들웨어');
@@ -18,7 +29,7 @@ router.use((req, res, next) => {            // 라우터 등록
 //         : tweets;
 //     res.status(200).json(data);
 // });
-router.get('/', tweetController.getTweets());
+router.get('/', tweetController.getTweets);
 
 // 글번호에 대한 트윗 가져오기
 // GET
@@ -32,7 +43,7 @@ router.get('/', tweetController.getTweets());
 //         res.status(404).json({message: `${id}의 해당 트윗이 없습니다.`});
 //     }
 // });
-router.get('/:id', tweetController.getTweet());
+router.get('/:id', tweetController.getTweet);
 
 
 // 트윗하기
@@ -53,7 +64,7 @@ router.get('/:id', tweetController.getTweet());
 //     tweets = [tweet, ...tweets];
 //     res.status(201).json(tweets);
 // })
-router.post('/', tweetController.createTweet);
+router.post('/', validateTweet, tweetController.createTweet);
 
 
 // 트윗 수정하기
@@ -72,7 +83,7 @@ router.post('/', tweetController.createTweet);
 //         res.status(404).json({message: `${id}의 해당 트윗이 없습니다.`});
 //     }
 // })
-router.put('/:id', tweetController.updateTweet);
+router.put('/:id', validateTweet, tweetController.updateTweet);
 
 
 // 트윗 삭제하기
@@ -84,5 +95,6 @@ router.put('/:id', tweetController.updateTweet);
 //     res.status(201).json(tweets);
 // });
 router.delete('/:id', tweetController.deleteTweet);
+
 export default router;
 

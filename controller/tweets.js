@@ -4,7 +4,7 @@ import * as tweetRepository from '../data/tweets.js'
 export async function getTweets(req, res){
     const username = req.query.username;
     const data = await (username ? tweetRepository.getAllByUsername(username)
-                                    : tweetRepository,getAll());
+                                    : tweetRepository.getAll());
     res.status(200).json(data);
 }
 
@@ -12,11 +12,11 @@ export async function getTweets(req, res){
 export async function getTweet(req, res, next) {
     const id = req.params.id   // 요청 URL에서 트윗 ID 추출
     const tweet = await tweetRepository.getByID(id);
-    if(!tweet){
-        return res.status(404).json({message : '트윗을 찾을 수 없습니다.'});
+    if(tweet){
+        res.status(200).json(tweet);
+    }else{
+        res.status(404).json({message:`${id}의 트윗이 없습니다`})
     }
-    res.status(200).json(tweet); 
-
 }
 
 // 트윗을 생성하는 함수

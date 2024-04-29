@@ -40,7 +40,7 @@ export async function create(text, name, username){
         text,
         createdAt: Date.now().toString(),
         name, // 키값과 변수값이 같으면 한번만 써도 됨 name: name,
-        usernmae // usernmae: username
+        username // usernmae: username
     };
     tweets = [tweet, ...tweets];
     return tweets;

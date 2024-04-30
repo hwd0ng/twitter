@@ -17,4 +17,6 @@ router.post('/signup', validateSignup, authController.signup);
 // 로그인
 router.post('/login', authController.login);
 
+router.get('/me', authController.verify);
+
 export default router;

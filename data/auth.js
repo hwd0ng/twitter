@@ -2,7 +2,7 @@ let users = [
     {        
         id: '1',
         username: 'apple',
-        password: '1111',
+        password: '$2b$10$dktsFMt9u/XF6F21TPfQceNAZYEXDfn1viNPUUef13KvBjYhOCvlq',
         name: '김사과',
         email: 'apple@apple.com',
         url: 'https://www.logoyogo.com/web/wp-content/uploads/edd/2021/02/logoyogo-1-45-966x1024.jpg'
@@ -16,11 +16,6 @@ let users = [
         url: 'https://i.pinimg.com/originals/69/ac/02/69ac028b9320e4d49b8265f2d7983ff3.jpg'
     }
 ]
-
-// 모든 유저를 리턴
-export async function getAll(){
-    return users;  
-}
 
 // ID에 대한 정보를 리턴
 export async function login(username){

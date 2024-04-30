@@ -23,7 +23,7 @@ export async function getAll(){
     return tweets;  
 }
 
-// 해당 아이디에 대한 트윗을 리턴
+// 해당 유저명에 대한 트윗을 리턴
 export async function getAllByUsername(username){
     return tweets.filter( (tweet) => tweet.username === username);
 }

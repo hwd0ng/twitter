@@ -2,7 +2,8 @@ import express from "express";
 import * as tweetController from '../controller/tweets.js'
 import { body } from 'express-validator';
 import { validate } from "../middleware/validator.js";
-
+//0502 추가
+import { isAuth } from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -29,7 +30,7 @@ router.use((req, res, next) => {            // 라우터 등록
 //         : tweets;
 //     res.status(200).json(data);
 // });
-router.get('/', tweetController.getTweets);
+router.get('/', isAuth, tweetController.getTweets);
 
 // 글번호에 대한 트윗 가져오기
 // GET
@@ -43,7 +44,7 @@ router.get('/', tweetController.getTweets);
 //         res.status(404).json({message: `${id}의 해당 트윗이 없습니다.`});
 //     }
 // });
-router.get('/:id', tweetController.getTweet);
+router.get('/:id', isAuth, tweetController.getTweet);
 
 
 // 트윗하기
@@ -64,7 +65,7 @@ router.get('/:id', tweetController.getTweet);
 //     tweets = [tweet, ...tweets];
 //     res.status(201).json(tweets);
 // })
-router.post('/', validateTweet, tweetController.createTweet);
+router.post('/', isAuth, tweetController.createTweet);
 
 
 // 트윗 수정하기
@@ -83,7 +84,7 @@ router.post('/', validateTweet, tweetController.createTweet);
 //         res.status(404).json({message: `${id}의 해당 트윗이 없습니다.`});
 //     }
 // })
-router.put('/:id', validateTweet, tweetController.updateTweet);
+router.put('/:id', validateTweet, isAuth, tweetController.updateTweet);
 
 
 // 트윗 삭제하기
@@ -94,7 +95,7 @@ router.put('/:id', validateTweet, tweetController.updateTweet);
 //     tweets = tweets.filter((tweet) => tweet.id !== id);  // 이 번호만 제외
 //     res.status(201).json(tweets);
 // });
-router.delete('/:id', tweetController.deleteTweet);
+router.delete('/:id', isAuth, tweetController.deleteTweet);
 
 export default router;
 

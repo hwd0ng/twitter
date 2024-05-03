@@ -1,6 +1,7 @@
 import * as authRepository from '../data/auth.js';
 import bcrypt from 'bcrypt';
 import jsonwebtoken from 'jsonwebtoken';
+import { config } from '../config.js';
 
 const secret = 'abcd1234%^&*';
 // 0502 추가
@@ -18,7 +19,8 @@ const bcryptSaltRounds = 10;   //파일로 나중에 뺄 예정
 
 // 0502 추가
 function createJwtToken(id){
-    return jsonwebtoken.sign({id}, secret, {expiresIn: jwtExpiresInDays})
+    // return jsonwebtoken.sign({id}, secret, {expiresIn: jwtExpiresInDays}) 
+    return jsonwebtoken.sign({id}, config.jwt.secretKey, {expiresIn: config.jwt.expiresIn})  // 0503 수정
 }
 
 // 회원가입(username, password, name, email 입력) 함수 (데이터를 추가)
@@ -29,7 +31,7 @@ export async function signup(req, res, next){
     if(found){
         return res.status(409).json({message:`${username}이 이미 있습니다`});
     }
-    const hashed = await bcrypt.hash(password, bcryptSaltRounds);
+    const hashed = await bcrypt.hash(password, config.bcrypt.saltRounds);  // 0503 수정
     const userId = await authRepository.createUser({username, hashed, name, email, url});
     const token = createJwtToken(userId); //토큰박스 얻어냄
     res.status(201).json({token, username}); 

@@ -1,60 +1,53 @@
-let users = [
-    {        
-        id: '1',
-        username: 'apple',
-        password: '$2b$10$dktsFMt9u/XF6F21TPfQceNAZYEXDfn1viNPUUef13KvBjYhOCvlq',
-        name: '김사과',
-        email: 'apple@apple.com',
-        url: 'https://www.logoyogo.com/web/wp-content/uploads/edd/2021/02/logoyogo-1-45-966x1024.jpg'
-    },
+import SQ from 'sequelize';
+import { sequelize } from '../db/database.js';
+const DataTypes = SQ.DataTypes;
+
+export const User = sequelize.define(
+    'user',
     {
-        id: '2',
-        username: 'banana',
-        password: '2222',
-        name: '반하나',
-        email: 'banana@banana.com',
-        url: 'https://i.pinimg.com/originals/69/ac/02/69ac028b9320e4d49b8265f2d7983ff3.jpg'
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            allowNull: false,
+            primaryKey: true
+        },
+        username: {
+            type: DataTypes.STRING(50),
+            allowNull: false
+        },
+        password: {
+            type: DataTypes.STRING(150),
+            allowNull: false
+        },
+        name: {
+            type: DataTypes.STRING(50),
+            allowNull: false
+        },
+        email: {
+            type: DataTypes.STRING(50),
+            allowNull: false
+        },
+        url: DataTypes.STRING(1000)
     },
-    {
-        id: '3',
-        username: 'orange',
-        password: '$2b$10$dktsFMt9u/XF6F21TPfQceNAZYEXDfn1viNPUUef13KvBjYhOCvlq',
-        name: '오렌지',
-        email: 'orange@orange.com',
-        url: 'https://www.logoyogo.com/web/wp-content/uploads/edd/2021/02/logoyogo-1-45-966x1024.jpg'
-    }
-]
+    { timestamps: false }
+);
 
-// ID에 대한 정보를 리턴
-export async function login(username){
-    return users.find( (user) => user.username === username);
-}
 
-// id, password, username 입력 후 회원가입
-export async function createUser(user){
-    //0502 수정
-    const created = {id:'10', ...user}
-    users.push(created);
-    return created.username;
-    // const user = {
-    //     id: '10',
-    //     username,    // username: username
-    //     password,    // 키값과 변수값이 같으면 한번만 써도 됨 password: password,
-    //     name,
-    //     email,
-    //     url: 'https://i.pinimg.com/originals/69/ac/02/69ac028b9320e4d49b8265f2d7983ff3.jpg'
-    // };
-    // users = [user, ...users];
-    // return users;
-}
-
-// 0502(목)
-// 아이디(username) 중복검사 추가
+// 아이디(username) 중복검사
 export async function findByUsername(username){
-    return users.find((user) => user.username === username);
+    return User.findOne({where: {username}});
 }
 
 // id 중복검사
 export async function findById(id){
-    return users.find((user) => user.id === id);
+    return User.findByPk(id);
 }
+
+export async function createUser(user){
+    return User.create(user).then((data) => data.dataValues.id)
+}
+
+// export async function login(username){
+//     const user = users.find((user) => user.username === username)
+//     return user;
+// }

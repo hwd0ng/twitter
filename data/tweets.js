@@ -1,42 +1,51 @@
-import MongoDB from 'mongodb';
-import { getTweets, getUsers } from '../db/database.js';
+import Mongoose from 'mongoose'
 import * as authRepository from './auth.js';
+import { useVirtualId } from '../db/database.js';
 
-const ObjectID = MongoDB.ObjectId;
+const tweetSchema = new Mongoose.Schema({
+    text: {type: String, require: true},
+    userId: {type: String, require: true},
+    name: {type: String, require: true},
+    username: {type: String, require: true},
+    url: String
+}, {timestamps: true});
+
+useVirtualId(tweetSchema);
+const Tweet = Mongoose.model('Tweet', tweetSchema);
 
 // 모든 트윗을 리턴
 export async function getAll() {
-    return getTweets().find().sort({ createdAt: -1 }).toArray().then(mapTweets);
+    return Tweet.find().sort({createdAt: -1});
 }
 
 // 해당 아이디에 대한 트윗을 리턴
 export async function getAllByUsername(username){
-    return getTweets().find({username}).sort({ createdAt: -1 }).toArray().then(mapTweets);
+    return Tweet.find({username}).sort({createdAt: -1});``
 }
 
 // 글번호에 대한 트윗을 리턴
 export async function getById(id){
-    return getTweets().find({_id: new ObjectID(id)}).next().then(mapOptionalTweet);
+    return Tweet.find(id);
 }
 
 // 트윗을 작성
 export async function create(text, userId){
-    return authRepository.findById(userId).then((user) => getTweets().insertOne({
+    return authRepository.findById(userId).then((user) => new Tweet({
         text,
-        userId,
+        name: user.name,
         username: user.username,
         url: user.url
-    })).then((result) => getById(result.insertedId)).then(mapOptionalTweet);
+    }).save())
 }
 
 // 트윗을 변경
 export async function update(id, text){
-    return getTweets().findOneAndUpdate({_id: new ObjectID(id)}, {$set: {text}}, {returnDocument: 'after'}).then((result) => result).then(mapOptionalTweet);
+    return Tweet.findByIdAndUpdate(id, {text}, {returnDocument: 'after'});
 }
 
 // 트윗을 삭제
 export async function remove(id){
-    return getTweets().deleteOne({_id: new ObjectID(id)});
+    return Tweet.findByIdAndDelete(id);
 }
 
 function mapTweets(tweets){

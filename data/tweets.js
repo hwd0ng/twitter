@@ -1,4 +1,4 @@
-import Mongoose from 'mongoose'
+import Mongoose from 'mongoose';
 import * as authRepository from './auth.js';
 import { useVirtualId } from '../db/database.js';
 
@@ -11,11 +11,11 @@ const tweetSchema = new Mongoose.Schema({
 }, {timestamps: true});
 
 useVirtualId(tweetSchema);
-const Tweet = Mongoose.model('Tweet', tweetSchema);
+const Tweet = Mongoose.model('tweet', tweetSchema);
 
 // 모든 트윗을 리턴
 export async function getAll() {
-    return Tweet.find().sort({createdAt: -1});
+    return Tweet.find();
 }
 
 // 해당 아이디에 대한 트윗을 리턴
@@ -28,15 +28,17 @@ export async function getById(id){
     return Tweet.find(id);
 }
 
+
 // 트윗을 작성
 export async function create(text, userId){
+    console.log(userId)
     return authRepository.findById(userId).then((user) => new Tweet({
         text,
         name: user.name,
         username: user.username,
         url: user.url
     }).save())
-}
+};
 
 // 트윗을 변경
 export async function update(id, text){

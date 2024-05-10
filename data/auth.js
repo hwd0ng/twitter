@@ -1,5 +1,3 @@
-import MongoDB from 'mongodb';
-// import { getUsers } from '../db/database.js';
 import Mongoose from 'mongoose';
 import { useVirtualId } from '../db/database.js';
 
@@ -16,22 +14,18 @@ useVirtualId(userSchema);
 const User = Mongoose.model('User', userSchema) // 자동으로 Users라고 만들어짐
                                                 // 스키마에 맞춰서 넣지 않으면 에러
 
-const ObjectID = MongoDB.ObjectId;
-
 // 아이디(username) 중복검사
 export async function findByUsername(username){
-    // return getUsers().find({username}).next().then(mapOptionalUser);
     return User.findOne({username});
 }
 
 // id 중복검사
 export async function findById(id){
-    // return getUsers().find({_id: new ObjectID(id)}).next().then(mapOptionalUser);
     return User.findById(id);
 }
 
+// id 생성
 export async function createUser(user){
-    // return getUsers().insertOne(user).then((result) => console.log(result.insertedId.toString()));
     return new User(user).save().then((data) => data.id); 
 }
 

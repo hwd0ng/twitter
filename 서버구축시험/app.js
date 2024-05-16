@@ -1,7 +1,7 @@
 import express from "express";
 import morgan from "morgan";
-import tweetsRouter from './router/tweets.js';
-import authRouter from './router/auth.js';
+import memberRouter from './router/member.js';
+import hotelRouter from './router/hotel.js';
 import { config } from "./config.js";
 import { connectDB } from "./db/database.js";
 
@@ -10,10 +10,8 @@ const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
 
-app.use('/tweets', tweetsRouter);
-app.use('/auth', authRouter);
-
-
+app.use('/member', memberRouter);
+app.use('/hotel', hotelRouter);
 
 app.use((req, res, next) => {
     res.sendStatus(404);

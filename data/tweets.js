@@ -25,13 +25,11 @@ export async function getAllByUsername(username){
 
 // 글번호에 대한 트윗을 리턴
 export async function getById(id){
-    return Tweet.find(id);
+    return Tweet.findById(id);
 }
-
 
 // 트윗을 작성
 export async function create(text, userId){
-    console.log(userId)
     return authRepository.findById(userId).then((user) => new Tweet({
         text,
         name: user.name,

@@ -3,12 +3,12 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { config } from '../config.js';
 
-
+// 토큰생성
 function createJwtToken(id){
     return jwt.sign({id}, config.jwt.secretKey, {expiresIn: config.jwt.expiresInSec});
 }
 
-
+// 회원가입
 export async function signup(req, res, next){
     let {username, password, name, email, url} = req.body;
     const found = await authRepository.findByUsername(username);
@@ -18,9 +18,10 @@ export async function signup(req, res, next){
     password = await bcrypt.hash(password, config.bcrypt.saltRounds);
     const userId = await authRepository.createUser({username, password, name, email, url});
     const token = createJwtToken(userId);
-    res.status(201).json({token, username});
+    res.status(201).json({message:'로그인 성공', token, username});
 }
 
+// 로그인
 export async function login(req, res, next){
     const {username, password} = req.body;
     // const user = await authRepository.login(username);

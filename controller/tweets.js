@@ -11,7 +11,8 @@ export async function getTweets(req, res){
 // 하나의 트윗을 가져오는 함수
 export async function getTweet(req, res, next) {
     const id = req.params.id   // 요청 URL에서 트윗 ID 추출
-    const tweet = await tweetRepository.getByID(id);
+    console.log(id);
+    const tweet = await tweetRepository.getById(id);
     if(tweet){
         res.status(200).json(tweet);
     }else{

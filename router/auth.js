@@ -6,7 +6,6 @@ import { isAuth } from '../middleware/auth.js';
 
 const router = express.Router();
 
-//0502 추가
 const validateLogin = [
     body('username').trim().notEmpty().withMessage('username을 입력하세요'),
     body('password').trim().isLength({min:4}).withMessage('password는 최소 4자 이상 입력하세요'), validate
